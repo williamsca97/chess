@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <ctype.h>
+#include <string.h>
 #include "chess.h"
 
 char *file_chars = "abcdefgh";
@@ -80,10 +81,10 @@ void set_default_board(game_t *this_game) {
 
 void print_game_state(game_t *this_game) {
   char *player = "Empty";
-  if (this_game->player = WHITE) {
+  if (this_game->player == WHITE) {
     player = "White";
   }
-  else if (this_game->player = BLACK) {
+  else if (this_game->player == BLACK) {
     player = "Black";
   }
 
@@ -130,8 +131,41 @@ void print_game_state(game_t *this_game) {
   printf("\n   a b c d e f g h  \n");
 }
 
+void get_user_input(char *prompt, char *dest) {
+  if (prompt != NULL && strlen(prompt) > 0) {
+    printf("%s", prompt);
+    fflush(stdout);
+  }
+  while (fgets(dest, 1000, stdin) == NULL) {
+    printf("No command given. Enter \"help\" for a list of commands.\n");
+  }
+  dest[strlen(dest) - 1] = '\0';
+}
+
 int main() {
+  int game_over = 0;
+  int advance = 0;
+  char user_str[1000];
+
   game_t *this_game = new_game();
   set_default_board(this_game);
-  print_game_state(this_game);
+
+  while (!game_over) {
+    print_game_state(this_game);
+    get_user_input("Enter command:\n", user_str);
+    if (!(strcmp(user_str, "quit"))) {
+      get_user_input("Are you sure? (y/n)\n", user_str);
+      if (!(strcmp(user_str, "y"))) {
+        printf("Exiting.\n");
+        exit(0);
+      }
+    }
+    if (this_game->player == WHITE) {
+      this_game->player = BLACK;
+    }
+    else {
+      this_game->turn += 1;
+      this_game->player = WHITE;
+    }
+  }
 }
