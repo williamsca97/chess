@@ -4,7 +4,7 @@
 #include "chess.h"
 
 game_t *new_game() {
-  game_t *this_game = malloc(sizeof(game_t*));
+  game_t *this_game = malloc(sizeof(game_t));
   this_game->turn = 1;
   this_game->player = WHITE;
   this_game->white_capt_num = 0;
@@ -23,15 +23,13 @@ game_t *new_game() {
     }
   }
 
-  enum type *white_capt_arr = malloc(sizeof(enum type*) * 16);
-  enum type *black_capt_arr = malloc(sizeof(enum type*) * 16);
+  this_game->white_capt_pieces = malloc(sizeof(enum type*) * 16);
+  this_game->black_capt_pieces = malloc(sizeof(enum type*) * 16);
   int i;
   for (i = 0; i < 16; i++) {
-    white_capt_arr[i] = EMPTY;
-    black_capt_arr[i] = EMPTY;
+    this_game->white_capt_pieces[i] = EMPTY;
+    this_game->black_capt_pieces[i] = EMPTY;
   }
-  this_game->white_capt_pieces = white_capt_arr;
-  this_game->black_capt_pieces = black_capt_arr;
 
   return this_game;
 }
