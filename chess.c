@@ -10,18 +10,18 @@ game_t *new_game() {
   this_game->white_capt_num = 0;
   this_game->black_capt_num = 0;
 
-  square_t ***this_board = malloc(sizeof(square_t*) * 64);
+  this_game->board = malloc(8 * sizeof(square_t**));
   int rank;
   int file;
   for (rank = 0; rank < 8; rank++) {
+    this_game->board[rank] = malloc(8 * sizeof(square_t*));
     for (file = 0; file < 8; file++) {
-      this_board[rank][file] = malloc(sizeof(square_t));
-      this_board[rank][file]->occupied = 0;
-      this_board[rank][file]->piece = EMPTY;
-      this_board[rank][file]->player = NONE;
+      this_game->board[rank][file] = malloc(sizeof(square_t));
+      this_game->board[rank][file]->occupied = 0;
+      this_game->board[rank][file]->piece = EMPTY;
+      this_game->board[rank][file]->player = NONE;
     }
   }
-  this_game->board = this_board;
 
   enum type *white_capt_arr = malloc(sizeof(enum type*) * 16);
   enum type *black_capt_arr = malloc(sizeof(enum type*) * 16);
@@ -41,11 +41,11 @@ void set_default_board(game_t *this_game) {
   for (file = 0; file < 8; file++) {
     this_game->board[0][file]->player = WHITE;
     this_game->board[1][file]->player = WHITE;
+    this_game->board[6][file]->player = BLACK;
     this_game->board[7][file]->player = BLACK;
-    this_game->board[8][file]->player = BLACK;
 
     this_game->board[1][file]->piece = PAWN;
-    this_game->board[7][file]->piece = PAWN;
+    this_game->board[6][file]->piece = PAWN;
   }
 
   this_game->board[0][0]->piece = ROOK;
@@ -67,7 +67,20 @@ void set_default_board(game_t *this_game) {
   this_game->board[7][7]->piece = ROOK;
 }
 
+void print_game_state(game_t *this_game) {
+  char *player = "Empty";
+  if (this_game->player = WHITE) {
+    player = "White";
+  }
+  else if (this_game->player = BLACK) {
+    player = "Black";
+  }
+
+  printf("Turn: %d (%s)\n", this_game->turn, player);
+}
+
 int main() {
   game_t *this_game = new_game();
   set_default_board(this_game);
+  print_game_state(this_game);
 }

@@ -1,2 +1,2 @@
 chess-engine:
-	gcc chess.c chess.h -o chess
+	gcc -g chess.c chess.h -o chess
