@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <ctype.h>
 #include "chess.h"
 
 char *file_chars = "abcdefgh";
@@ -27,11 +28,6 @@ game_t *new_game() {
 
   this_game->white_capt_pieces = malloc(sizeof(enum type*) * 16);
   this_game->black_capt_pieces = malloc(sizeof(enum type*) * 16);
-  int i;
-  for (i = 0; i < 16; i++) {
-    this_game->white_capt_pieces[i] = EMPTY;
-    this_game->black_capt_pieces[i] = EMPTY;
-  }
 
   return this_game;
 }
@@ -91,18 +87,47 @@ void print_game_state(game_t *this_game) {
     player = "Black";
   }
 
-  printf("Turn: %d (%s)\n", this_game->turn, player);
-  printf("  a b c d e f g h  \n");
+  printf("Turn %d (%s)\n\n\n", this_game->turn, player);
+  printf("   a b c d e f g h  \n\n");
   int rank;
   int file;
+  char to_print;
   for (rank = 7; rank >= 0; rank--) {
-    printf("%d ", rank + 1);
+    printf("%d  ", rank + 1);
     for (file = 0; file < 8; file++) {
-      //
+      if (this_game->board[rank][file]->occupied) {
+        switch (this_game->board[rank][file]->piece->type) {
+          case PAWN:
+            to_print = 'p';
+            break;
+          case BISHOP:
+            to_print = 'b';
+            break;
+          case KNIGHT:
+            to_print = 'n';
+            break;
+          case ROOK:
+            to_print = 'r';
+            break;
+          case QUEEN:
+            to_print = 'q';
+            break;
+          case KING:
+            to_print = 'k';
+            break;
+        }
+        if (this_game->board[rank][file]->piece->player) {
+          to_print = toupper(to_print);
+        }
+      }
+      else {
+        to_print = '.';
+      }
+      printf("%c ", to_print);
     }
     printf(" %d\n", rank + 1);
   }
-  printf("  a b c d e f g h  \n");
+  printf("\n   a b c d e f g h  \n");
 }
 
 int main() {

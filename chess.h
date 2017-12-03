@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-typedef enum type {EMPTY, KING, QUEEN, KNIGHT, ROOK, BISHOP, PAWN} type;
-typedef enum color {NONE, WHITE, BLACK} color;
+typedef enum type {KING, QUEEN, KNIGHT, ROOK, BISHOP, PAWN} type;
+typedef enum color {WHITE, BLACK} color;
 
 typedef struct piece_t {
   enum type type;
