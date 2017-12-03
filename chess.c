@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "chess.h"
+#include "moves.h"
 
 char *file_chars = "abcdefgh";
 
@@ -152,6 +153,7 @@ int main() {
 
   while (!game_over) {
     print_game_state(this_game);
+    move_t *****all_valid_moves = get_all_valid_moves(this_game);
     get_user_input("Enter command:\n", user_str);
     if (!(strcmp(user_str, "quit"))) {
       get_user_input("Are you sure? (y/n)\n", user_str);

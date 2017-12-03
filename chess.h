@@ -39,4 +39,6 @@ typedef struct game_t {
   enum type **black_capt_pieces;
 } game_t;
 
+game_t *new_game();
+
 #endif
