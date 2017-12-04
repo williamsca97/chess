@@ -37,6 +37,8 @@ typedef struct game_t {
   uint8_t black_capt_num;
   enum type **white_capt_pieces;
   enum type **black_capt_pieces;
+  uint8_t white_in_check;
+  uint8_t black_in_check;
 } game_t;
 
 game_t *new_game();
