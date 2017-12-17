@@ -50,10 +50,73 @@ move_t *check_pawn_move_empty(game_t *this_game, int rank, int file, int protect
   return NULL;
 }
 
+move_t *check_move(game_t *this_game, int rank, int file, int protect_king, enum color player) {
+  if (rank >= 0 && rank < 8) {
+    if (file >= 0 && file < 8) {
+      if (!(this_game->board[rank][file]->occupied)) {
+        move_t *this_move = malloc(sizeof(move_t));
+        this_move->has_capture = 0;
+        this_move->double_pawn = 0;
+        this_move->en_passant = 0;
+        this_move->promotion = 0;
+        return this_move;
+      }
+      else if (this_game->board[rank][file]->occupied) {
+        if (this_game->board[rank][file]->piece->player != player) {
+          move_t *this_move = malloc(sizeof(move_t));
+          this_move->has_capture = 1;
+          this_move->double_pawn = 0;
+          this_move->en_passant = 0;
+          this_move->promotion = 0;
+          return this_move;
+        }
+      }
+    }
+  }
+  return NULL;
+}
+
+move_t ***get_moves_knight(game_t *this_game, int rank, int file, int protect_king) {
+  enum color player;
+  int direction;
+  if (protect_king == 1) {
+    player = this_game->player;
+  }
+  else if (protect_king == 0) {
+    if (this_game->player == WHITE) {
+      player = BLACK;
+    }
+    else if (this_game->player == BLACK) {
+      player = WHITE;
+    }
+  }
+  if (player == WHITE) {
+    direction = 1;
+  }
+  else if (player == BLACK) {
+    direction = -1;
+  }
+  move_t ***piece_moves = malloc(8 * sizeof(move_t**));
+  int i;
+  for (i = 0; i < 8; i++) {
+    piece_moves[i] = malloc(8 * sizeof(move_t*));
+  }
+
+  piece_moves[rank + 2][file + 1] = check_move(this_game, rank + 2, file + 1, protect_king, player);
+  piece_moves[rank + 2][file - 1] = check_move(this_game, rank + 2, file - 1, protect_king, player);
+  piece_moves[rank - 2][file + 1] = check_move(this_game, rank - 2, file + 1, protect_king, player);
+  piece_moves[rank - 2][file - 1] = check_move(this_game, rank - 2, file - 1, protect_king, player);
+  piece_moves[rank + 1][file + 2] = check_move(this_game, rank + 1, file + 2, protect_king, player);
+  piece_moves[rank + 1][file - 2] = check_move(this_game, rank + 1, file - 2, protect_king, player);
+  piece_moves[rank - 1][file + 2] = check_move(this_game, rank - 1, file + 2, protect_king, player);
+  piece_moves[rank - 1][file - 2] = check_move(this_game, rank - 1, file - 2, protect_king, player);
+
+  return piece_moves;
+}
+
 move_t ***get_moves_pawn(game_t *this_game, int rank, int file, int protect_king) {
   enum color player;
   int direction;
-  int move_count = 0;
   if (protect_king == 1) {
     player = this_game->player;
   }
@@ -87,10 +150,6 @@ move_t ***get_moves_pawn(game_t *this_game, int rank, int file, int protect_king
 }
 
 move_t ***get_moves_bishop(game_t *this_game, int rank, int file, int protect_king) {
-
-}
-
-move_t ***get_moves_knight(game_t *this_game, int rank, int file, int protect_king) {
 
 }
 
